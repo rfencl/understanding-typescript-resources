@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-// fs.readFileSync()
+console.log(fs.readFileSync('./package.json', 'utf-8'));
 
 let userName: string;
 

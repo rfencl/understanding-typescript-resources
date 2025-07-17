@@ -9,11 +9,14 @@ users = [1, 'Max'];
 users = [5, 1];
 users = ['Max', 'Anna'];
 
-let possibleResults: [number, number]; // [1, -1]
+// let possibleResults: number[]
+let possibleResults: [number, number] = [1, -1]
 
-possibleResults = [1, -1];
+// possibleResults = [1, -1];
 // possibleResults = [5, 10, 12];
+console.log(possibleResults);
 
+// objects
 let user: {
   name: string;
   age: number | string;
@@ -25,14 +28,16 @@ let user: {
 } = {
   name: 'Max',
   age: 38,
-  hobbies: ['Sports', 'Cooking'],
+  hobbies: ['Sp orts', 'Cooking'],
   role: {
     description: 'admin',
     id: 5
   }
 };
 
-let val: {} = 'is a value';
+let val: {} = 'is a type';
+
+console.log(val)
 
 let data: Record<string, number | string>;
 

@@ -14,7 +14,15 @@ type User = {
 };
 
 let userRole: Role = 'admin';
+console.log(userRole);
 
+let user: User = {
+  name: 'Max',
+  age: 30,
+  role: userRole,
+  permissions: ['read', 'write']
+};
+console.log('User:', user);
 // ...
 
 userRole = 'guest';

@@ -1,3 +1,3 @@
-let userName = 'Max';
+// let userName = 'Max';
 
-console.log(typeof userName);
+// console.log(typeof userName);
