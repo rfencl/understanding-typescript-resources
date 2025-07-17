@@ -50,8 +50,8 @@ function calculateInvestment(data: InvestmentData): CalculationResult {
   // destructuring the input data
   const { initialAmount, annualContribution, expectedReturn, duration } = data;
   // Validate the input data
-  
   let validationResult = isValidData(data);
+  
   if (validationResult !== true) {
     return validationResult as string; 
   } 
@@ -84,20 +84,19 @@ function printResults(results: CalculationResult) {
   // Check if the results are an error message or an array of results
   if (typeof results === 'string') {
     console.log(results);
-    return;
-  }
-
-  for (const yearEndResult of results) {
-    console.log(yearEndResult.year);
-    console.log(`Total: ${yearEndResult.totalAmount.toFixed(0)}`);
-    console.log(`Total Contributions: ${yearEndResult.totalContributions.toFixed(0)}`);
-    console.log(`Total Interest Earned: ${yearEndResult.totalInterestEarned.toFixed(0)}`);
-    console.log('----------------------');
+  } else {
+    for (const yearEndResult of results) {
+      console.log(yearEndResult.year);
+      console.log(`Total: ${yearEndResult.totalAmount.toFixed(0)}`);
+      console.log(`Total Contributions: ${yearEndResult.totalContributions.toFixed(0)}`);
+      console.log(`Total Interest Earned: ${yearEndResult.totalInterestEarned.toFixed(0)}`);
+      console.log('----------------------');
+    }
   }
 }
 
 const investmentData: InvestmentData = {
-  initialAmount: -1,
+  initialAmount: 5000,
   annualContribution: 500,
   expectedReturn: 0.08,
   duration: 10
