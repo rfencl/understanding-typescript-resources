@@ -26,6 +26,32 @@ class AuthenticatableUser implements Authenticatable {
   }
 }
 
+class AuthenticatableAdminUser implements AuthenticatableAdmin {
+  constructor(
+    public userName: string,
+    public email: string,
+    public password: string,
+    public role: 'admin' | 'superadmin'
+  ) {}
+
+  login() {
+    // ...
+  }
+
+  logout() {
+    // ...
+  }
+}   
+
+let adminUser: AuthenticatableAdmin = new AuthenticatableAdminUser(
+  'AdminUser',
+  'email.email.com',
+  'password123',
+  'admin'
+);  
+
+console.log(adminUser);
+
 // ...
 
 function authenticate(user: Authenticatable) {
@@ -48,3 +74,16 @@ user = {
     // clear the session
   },
 };
+
+
+interface SumFn {
+  (a: number, b: number): number;
+}
+  
+let sum: SumFn;
+
+sum = (a: number, b: number) => {
+  return a * b;
+};  
+
+console.log(sum(2, 3)); // 6

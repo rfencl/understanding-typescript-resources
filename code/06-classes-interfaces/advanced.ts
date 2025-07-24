@@ -31,8 +31,9 @@ console.log(User.eid);
 User.greet();
 
 const max = new User();
-max.firstName = 'Max';
-max.lastName = '';
+
+max.firstName = '';
+max.lastName = 'SchwarzMuller';
 // max._firstName = 'Max 2';
 console.log(max.fullName);
 
@@ -49,20 +50,20 @@ class Employee extends User {
   }
 }
 
-abstract class UIElement {
-  constructor(public identifier: string) {}
+// abstract class UIElement {
+//   constructor(public identifier: string) {}
 
-  clone(targetLocation: string) {
-    // logic to duplicate the UI element
-  }
-}
+//   clone(targetLocation: string) {
+//     // logic to duplicate the UI element
+//   }
+// }
 
-// let uiElement = new UIElement();
+// // let uiElement = new UIElement();
 
-class SideDrawerElement extends UIElement {
-  constructor(public identifier: string, public position: 'left' | 'right') {
-    super(identifier);
-  }
+// class SideDrawerElement extends UIElement {
+//   constructor(public identifier: string, public position: 'left' | 'right') {
+//     super(identifier);
+//   }
 
-  // ...
-}
+//   // ...
+// }
