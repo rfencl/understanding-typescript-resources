@@ -11,3 +11,5 @@ function getLength(val: string | any[]) {
 const numOfWords = getLength('does this work?');
 numOfWords.length;
 const numItems = getLength(['Sports', 'Cookies']);
+console.log(`number of items: ${numItems}`);
+console.log(`number of words: ${numOfWords}`);

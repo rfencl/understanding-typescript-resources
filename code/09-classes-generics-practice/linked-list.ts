@@ -1,7 +1,7 @@
-class ListNode<T> {
-  next?: ListNode<T>;
+class ListNode<T> {   // Generic class for a node in the linked list
+  next?: ListNode<T>; // Pointer to the next node in the list
 
-  constructor(public value: T) {}
+  constructor(public value: T) {} // Constructor to initialize the node with a value, typescript will add the property value automatically
 }
 
 class LinkedList<T> {
@@ -11,27 +11,28 @@ class LinkedList<T> {
 
   add(value: T) {
     const node = new ListNode(value);
-    if (!this.root || !this.tail) {
+    if (this.length === 0) {  // Check if the list is empty
       this.root = node;
       this.tail = node;
     } else {
-      this.tail.next = node;
+      this.tail!.next = node; // Use non-null assertion since we know tail exists
       this.tail = node;
     }
     this.length++;
   }
 
-  insertAt(value: T, pos: number) {
-    if (pos > -1 && pos < this.length && this.root) {
+  insertAt(pos: number, value: T) {
+    if (pos > -1 && pos < this.length && this.root) { 
       let current = this.root;
       let index = 0;
       let previous = current;
       let node = new ListNode(value);
 
-      if (pos === 0) {
+      if (pos === 0) {           // Insert at the beginning
         node.next = this.root;
         this.root = node;
-      } else {
+      } else {                   // Insert in the middle or at the end
+        let current = this.root;
         while (index++ < pos && current.next) {
           previous = current;
           current = current.next;
@@ -41,8 +42,9 @@ class LinkedList<T> {
       }
       this.length++;
       return true;
-    } else {
-      return false;
+    } else {                // If position is out of bounds
+      this.add(value);
+      return true;
     }
   }
 
@@ -96,7 +98,15 @@ console.log('Length: ' + numberList.getNumberOfElements());
 numberList.print();
 
 console.log('--- NOW INSERTING AT INDEX 1 ---');
-numberList.insertAt(100, 1);
+numberList.insertAt(1, 100);
+console.log('Length: ' + numberList.getNumberOfElements());
+numberList.print();
+
+numberList.insertAt(0, 35);
+console.log('Length: ' + numberList.getNumberOfElements());
+numberList.print();
+
+numberList.insertAt(40, 50); // This will add 50 at the end since 40 is out of bounds
 console.log('Length: ' + numberList.getNumberOfElements());
 numberList.print();
 

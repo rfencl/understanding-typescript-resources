@@ -1,6 +1,7 @@
 let names: Array<string> = ['Max', 'Anna'];
+let names2: string[] = ['Max', 'Anna'];      // Both are equivalent
 
-type DataStore<T> = {
+type DataStore<T> = {   
   [key: string]: T;
 };
 
@@ -28,4 +29,7 @@ class User<T> {
 }
 
 const user = new User('i1');
-user.id
+console.log(user.id);
+
+const user2 = new User(1);
+console.log(user2.id);

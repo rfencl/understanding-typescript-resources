@@ -44,7 +44,8 @@ function isFile(source: Source): source is FileSource {
 
 function loadData(source: Source) {
   // if ('path' in source) {
-  if (source.type === 'file') {
+  // if (source.type === 'file') {
+  if (source instanceof FileSource) {
     // source.path
     // source.path; => use that to open the file
     return;

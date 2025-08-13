@@ -1,11 +1,13 @@
 type Operations = {
-  readonly add: (a: number, b: number) => number;
-  readonly subtract: (a: number, b: number) => number;
+   readonly  add: (a: number, b: number) => number;
+   readonly  subtract: (a: number, b: number) => number;
 };
 
-type Results<T> = {
-  [Key in keyof T]?: number;
+// Using mapped types to create a new type with all properties optional
+type Results<T> = {  
+     readonly  [Key in keyof T]?: number;
 };
+
 
 let mathOperations: Operations = {
   add(a: number, b: number) {
@@ -21,4 +23,6 @@ let mathResults: Results<Operations> = {
   subtract: mathOperations.subtract(5, 2),
 };
 
+console.log(mathResults)
 mathResults.add = 10;
+console.log(mathResults)

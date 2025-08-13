@@ -17,3 +17,11 @@ type DataFileEventNames = `${keyof DataFile}Changed`;
 type DataFileEvents = {
   [Key in DataFileEventNames]: () => void;
 };
+
+const fileEvents: DataFileEvents = {
+  dataChanged:  () => console.log('Data changed!'),
+  permissionsChanged: () => console.log('Permissions changed!'),
+};
+
+fileEvents.dataChanged();
+fileEvents.permissionsChanged();

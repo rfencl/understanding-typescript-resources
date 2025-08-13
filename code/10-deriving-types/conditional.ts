@@ -14,19 +14,22 @@ type Example2 = GetElementType<typeof text>;
 type FullnamePerson = { firstName: string; lastName: string };
 type FullnameOrNothing<T> = T extends FullnamePerson ? string : never;
 
+
+function isFullName(person: any): person is FullnamePerson {
+  return (
+    typeof person.firstName === 'string' &&
+    typeof person.lastName === 'string'
+  );
+}
+
 function getFullname<T extends object>(person: T): FullnameOrNothing<T> {
-  if (
-    'firstName' in person &&
-    'lastName' in person &&
-    person.firstName &&
-    person.lastName
-  ) {
+  if (isFullName(person)) {
     return `${person.firstName} ${person.lastName}` as FullnameOrNothing<T>;
   }
-
   throw new Error('No first name and / or last name found.');
 }
 
-const name1 = getFullname({});
 const name2 = getFullname({firstName: 'Max', lastName: 'Schwarzmüller'})
-
+console.log(name2); // This will log "Max Schwarzmüller"  
+const name1 = getFullname({});
+console.log(name1); // This will throw an error

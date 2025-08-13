@@ -4,7 +4,7 @@ console.log(typeof userName);
 
 type UserName = typeof userName;
 
-const settings = {
+let settings = {
   difficulty: 'easy',
   minLevel: 10,
   didStart: false,
@@ -14,7 +14,13 @@ const settings = {
 // type Settings = typeof settings;
 
 function loadData(s: typeof settings) {
-  // ...
+  s.didStart = true;
+  s.minLevel = 5;
+  s.difficulty = 'hard';
+  s.players.push('Max');
+  return s;
 }
 
-loadData(settings);
+settings = loadData(settings);
+
+console.log (settings);
