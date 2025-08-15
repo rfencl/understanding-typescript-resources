@@ -1,6 +1,6 @@
 function Logger(logString: string) {
   console.log('LOGGER FACTORY');
-  return function(constructor: Function) {
+  return function (constructor: Function) {
     console.log(logString);
     console.log(constructor);
   };
@@ -8,13 +8,13 @@ function Logger(logString: string) {
 
 function WithTemplate(template: string, hookId: string) {
   console.log('TEMPLATE FACTORY');
-  return function<T extends { new (...args: any[]): { name: string } }>(
+  return function <T extends { new(...args: any[]): { name: string } }>(
     originalConstructor: T
   ) {
     return class extends originalConstructor {
       constructor(..._: any[]) {
         super();
-        console.log('Rendering template');
+        console.log(`Rendering template ${template} at hook ${hookId}`);
         const hookEl = document.getElementById(hookId);
         if (hookEl) {
           hookEl.innerHTML = template;
@@ -37,15 +37,14 @@ class Person {
 }
 
 const pers = new Person();
-
 console.log(pers);
-
 // ---
 
 function Log(target: any, propertyName: string | Symbol) {
   console.log('Property decorator!');
   console.log(target, propertyName);
 }
+
 
 function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
   console.log('Accessor decorator!');
@@ -65,12 +64,14 @@ function Log3(
   console.log(descriptor);
 }
 
+
 function Log4(target: any, name: string | Symbol, position: number) {
   console.log('Parameter decorator!');
   console.log(target);
   console.log(name);
   console.log(position);
 }
+
 
 class Product {
   @Log
@@ -96,7 +97,6 @@ class Product {
     return this._price * (1 + tax);
   }
 }
-
 const p1 = new Product('Book', 19);
 const p2 = new Product('Book 2', 29);
 
@@ -138,6 +138,7 @@ interface ValidatorConfig {
 
 const registeredValidators: ValidatorConfig = {};
 
+
 function Required(target: any, propName: string) {
   registeredValidators[target.constructor.name] = {
     ...registeredValidators[target.constructor.name],
@@ -152,27 +153,39 @@ function PositiveNumber(target: any, propName: string) {
   };
 }
 
+
 function validate(obj: any) {
   const objValidatorConfig = registeredValidators[obj.constructor.name];
   if (!objValidatorConfig) {
-    return true;
+    return { isValid: true, failedProperties: [] };
   }
   let isValid = true;
+  const failedProperties: string[] = [];
   for (const prop in objValidatorConfig) {
     for (const validator of objValidatorConfig[prop]) {
+      // console.log(prop, validator);
       switch (validator) {
         case 'required':
           isValid = isValid && !!obj[prop];
+          if (!isValid) {
+            const msg = `${prop} cannot be empty`;
+            console.log(msg);
+            failedProperties.push(msg);
+          }
           break;
         case 'positive':
           isValid = isValid && obj[prop] > 0;
+          if (!isValid) {
+            const msg = `${prop} must be a positive number`;
+            console.log(msg);
+            failedProperties.push(msg);
+          }
           break;
       }
     }
   }
-  return isValid;
+  return { isValid, failedProperties };
 }
-
 class Course {
   @Required
   title: string;
@@ -184,7 +197,6 @@ class Course {
     this.price = p;
   }
 }
-
 const courseForm = document.querySelector('form')!;
 courseForm.addEventListener('submit', event => {
   event.preventDefault();
@@ -196,8 +208,9 @@ courseForm.addEventListener('submit', event => {
 
   const createdCourse = new Course(title, price);
 
-  if (!validate(createdCourse)) {
-    alert('Invalid input, please try again!');
+  const validatedResult = validate(createdCourse);
+  if (!validatedResult.isValid) {
+    alert('Invalid input!\n ' + validatedResult.failedProperties.join(',\n') + '\nplease try again!');
     return;
   }
   console.log(createdCourse);
