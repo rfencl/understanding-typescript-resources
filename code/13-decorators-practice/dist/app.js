@@ -125,6 +125,10 @@ class Component {
     }
 }
 class ProjectItem extends Component {
+    get persons() {
+        const numPeople = this.project.people;
+        return numPeople + ' person' + (numPeople > 1 ? 's' : '');
+    }
     constructor(hostId, project) {
         super('single-project', hostId, false, project.id);
         this.project = project;
@@ -135,7 +139,7 @@ class ProjectItem extends Component {
     }
     renderContent() {
         this.element.querySelector('h2').textContent = this.project.title;
-        this.element.querySelector('h3').textContent = `${this.project.people} assigned`;
+        this.element.querySelector('h3').textContent = `${this.persons} assigned`;
         this.element.querySelector('p').textContent = this.project.description;
     }
 }
