@@ -168,12 +168,39 @@ class ProjectList extends Component {
         this.configure();
         this.renderContent();
     }
+    dragOverHandler(event) {
+        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+            event.preventDefault();
+            this.element.classList.add('droppable');
+        }
+        const listEl = this.element.querySelector('ul');
+        listEl.classList.add('droppable');
+    }
+    dropHandler(event) {
+        const projectId = event.dataTransfer.getData('text/plain');
+        projectState.addListener((projects) => {
+            const project = projects.find(prj => prj.id === projectId);
+            if (project && ((this.type === 'active' && project.status !== ProjectStatus.Active) ||
+                (this.type === 'finished' && project.status !== ProjectStatus.Finished))) {
+                project.status = this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Finished;
+                projectState['notifyListeners']();
+            }
+        });
+        this.element.classList.remove('droppable');
+    }
+    dragLeaveHandler(_) {
+        const listEl = this.element.querySelector('ul');
+        listEl.classList.remove('droppable');
+    }
     renderContent() {
         const listId = `${this.type}-project-list`;
         this.element.querySelector('ul').id = listId;
         this.element.querySelector('h2').textContent = `${this.type.toUpperCase()} PROJECTS`;
     }
     configure() {
+        this.element.addEventListener('dragover', this.dragOverHandler);
+        this.element.addEventListener('dragleave', this.dragLeaveHandler);
+        this.element.addEventListener('drop', this.dropHandler);
         projectState.addListener((projects) => {
             const relevantProjects = projects.filter((project) => {
                 if (this.type === 'active') {
@@ -193,6 +220,15 @@ class ProjectList extends Component {
         }
     }
 }
+__decorate([
+    autobind
+], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    autobind
+], ProjectList.prototype, "dropHandler", null);
+__decorate([
+    autobind
+], ProjectList.prototype, "dragLeaveHandler", null);
 class ProjectInput extends Component {
     constructor() {
         super('project-input', 'app', true, 'user-input');
