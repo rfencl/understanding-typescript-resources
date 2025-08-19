@@ -1,3 +1,14 @@
+// Drag & Drop Interfaces
+interface Draggable {
+    dragStartHandler(event: DragEvent): void;
+    dragEndHandler(event: DragEvent): void;
+}
+
+interface DragTarget {
+    dragOverHandler(event: DragEvent): void;
+    dropHandler(event: DragEvent): void;
+    dragLeaveHandler(event: DragEvent): void;
+}
 
 // Project State Management
 // The ProjectState class is a singleton that manages the state of projects.
@@ -186,7 +197,7 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 // Project Item
 // The ProjectItem class extends the Component class and represents a single project item in the project list.
 // It is responsible for rendering the project details and configuring the item.
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements Draggable {
     private project: Project;
 
     get persons() {
@@ -201,8 +212,23 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
         this.configure();
         this.renderContent();
     }
-    configure() {
 
+    @autobind
+    dragStartHandler(event: DragEvent): void {
+        event.dataTransfer!.setData('text/plain', this.project.id);
+        event.dataTransfer!.effectAllowed = 'move';
+    }
+
+    @autobind
+    dragEndHandler(_: DragEvent): void {
+        console.log('Drag End');
+    }
+
+    configure() {
+        this.element.addEventListener('dragstart', this.dragStartHandler);
+        this.element.addEventListener('dragend', this.dragEndHandler);
+        this.element.setAttribute('draggable', 'true'); // Make the item draggable
+        this.element.classList.add('draggable'); // Add a class for styling
     }
     renderContent() {
         this.element.querySelector('h2')!.textContent = this.project.title;
