@@ -1,4 +1,8 @@
 // Drag & Drop Interfaces
+// These interfaces define the methods required for drag-and-drop functionality.
+// Draggable interface is for elements that can be dragged,
+// while DragTarget interface is for elements that can accept dropped items.
+// They ensure that classes implementing these interfaces provide the necessary methods for handling drag events.
 interface Draggable {
     dragStartHandler(event: DragEvent): void;
     dragEndHandler(event: DragEvent): void;
@@ -11,8 +15,6 @@ interface DragTarget {
 }
 
 // Project State Management
-// The ProjectState class is a singleton that manages the state of projects.
-// It allows adding new projects and provides a way to listen for changes in the project list.
 enum ProjectStatus {
     Active,
     Finished
@@ -29,7 +31,16 @@ class Project {
     ) { }
 }
 
+// Listener type definition
+// This type defines a listener function that takes an array of items of type T.
+// It is used to notify listeners about changes in the state of projects.
 type Listener<T> = (items: T[]) => void
+
+// The State class is a generic class that manages listeners for state changes.
+// It provides methods to add listeners that will be notified when the state changes.
+// This class is used as a base for managing the state of projects in the application.
+// It allows for a flexible way to handle different types of state changes by using generics.
+// The listeners are functions that take an array of items of type T and perform actions based on
 class State<T> {
     protected listeners: Listener<T>[] = []; // Array to hold listener functions        
     addListener(listenerFn: Listener<T>) {
@@ -37,6 +48,8 @@ class State<T> {
     }
 }
 
+// The ProjectState class is a singleton that manages the state of projects.
+// It allows adding new projects and provides a way to listen for changes in the project list.
 class ProjectState extends State<Project> {
     private projects: Project[] = [];
     private static instance: ProjectState;  // Singleton instance       
@@ -45,6 +58,8 @@ class ProjectState extends State<Project> {
         super();
     }
 
+    // getInstance method ensures that only one instance of ProjectState exists.
+    // It returns the existing instance if it exists, or creates a new one if it doesn't
     static getInstance() {
         if (this.instance) {
             return this.instance;
@@ -53,6 +68,11 @@ class ProjectState extends State<Project> {
         return this.instance;
     }
 
+    // addProject method allows adding a new project to the state.
+    // It creates a new Project instance and adds it to the projects array.
+    // After adding the project, it notifies all listeners about the change.
+    // This method is used to manage the project list and ensure that all components are updated when
+    // a new project is added.
     addProject(title: string, description: string, people: number) {
         const newProject = new Project(
             Math.random().toString(),
@@ -65,6 +85,11 @@ class ProjectState extends State<Project> {
         this.notifyListeners();
     }
 
+    // moveProject method allows changing the status of a project.
+    // It finds the project by its ID and updates its status to either Active or Finished.
+    // After updating the project, it notifies all listeners about the change.
+    // This method is used to manage the project list and ensure that all components are updated when
+    // a project's status changes.
     moveProject(projectId: string, newStatus: ProjectStatus) {
         const project = this.projects.find(prj => prj.id === projectId);
         if (project && project.status !== newStatus) {
@@ -73,6 +98,14 @@ class ProjectState extends State<Project> {
         }
     }
 
+    // notifyListeners method iterates over all registered listeners and calls them with a copy of the projects array.
+    // This ensures that all components that are listening for changes in the project state are updated with the latest project list.
+    // It is called whenever a project is added or its status is changed.
+    // This method is crucial for maintaining the reactive nature of the application, allowing components to update
+    // automatically when the state changes.
+    // It ensures that the UI reflects the current state of the projects.
+    // By passing a copy of the projects array, it prevents unintended side effects from modifying the
+    // original array while listeners are processing the data.
     private notifyListeners() {
         for (const listenerFn of this.listeners) {
             listenerFn(this.projects.slice()); // Notify listeners with a copy of the projects array
@@ -80,8 +113,24 @@ class ProjectState extends State<Project> {
     }
 }
 
+// Create a singleton instance of ProjectState
+// This instance is used throughout the application to manage the project state.
+// It ensures that there is a single source of truth for the project data,
+// allowing different components to access and modify the project list consistently.
+// The instance is created using the getInstance method of the ProjectState class,
+// which ensures that only one instance exists at any time.
+// This pattern is known as the Singleton pattern, which restricts the instantiation of a class
+// to a single object. It is useful in scenarios where a single point of control is needed
+// for managing shared resources or state, such as the project list in this application.
+// This instance can be used to add projects, move projects between active and finished states,
 const projectState = ProjectState.getInstance();
 
+// Decorator Function
+// The autobind decorator is used to automatically bind methods to the class instance.
+// It ensures that the method retains the correct context (this) when called, even if it is passed as a callback.
+// This is particularly useful in event handlers where the context may change.
+// The decorator modifies the method descriptor to return a bound version of the original method,
+// allowing it to be called with the correct context without needing to explicitly bind it in each method
 function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
     const adjDescriptor: PropertyDescriptor = {
@@ -208,6 +257,9 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements Draggable {
     private project: Project;
 
+    // The persons getter returns a formatted string indicating the number of people assigned to the project.
+    // It uses the project.people property to determine the number of people and returns a string
+    // that includes the correct pluralization based on the number of people.
     get persons() {
         const numPeople = this.project.people;
         return numPeople + ' person' + (numPeople > 1 ? 's' : '');
@@ -221,12 +273,22 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
         this.renderContent();
     }
 
+    // The dragStartHandler method is called when the user starts dragging the project item.
+    // It sets the data to be transferred during the drag operation, which is the project ID.
+    // It also sets the effect allowed for the drag operation to 'move', indicating that the item can be moved.
+    // This method is decorated with @autobind to ensure that it retains the correct context (this) when called as an event handler.
+    // The method is used to prepare the project item for dragging, allowing it to be moved to a different project list.
     @autobind
     dragStartHandler(event: DragEvent): void {
         event.dataTransfer!.setData('text/plain', this.project.id);
         event.dataTransfer!.effectAllowed = 'move';
     }
 
+    // The dragEndHandler method is called when the user ends the drag operation.
+    // It currently logs a message to the console indicating that the drag operation has ended.
+    // This method is also decorated with @autobind to ensure that it retains the correct context (this) when called as an event handler.
+    // The method can be extended in the future to perform additional actions when the drag operation ends, such as updating the UI or notifying other components.
+    // It is used to handle the end of the drag operation, allowing for cleanup or additional
     @autobind
     dragEndHandler(_: DragEvent): void {
         console.log('Drag End');
@@ -238,6 +300,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
         this.element.setAttribute('draggable', 'true'); // Make the item draggable
         this.element.classList.add('draggable'); // Add a class for styling
     }
+
     renderContent() {
         this.element.querySelector('h2')!.textContent = this.project.title;
         this.element.querySelector('h3')!.textContent = `${this.persons} assigned`;
