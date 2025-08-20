@@ -1,3 +1,5 @@
+/// <reference path="../components/base-component.ts" />
+/// <reference path="../decorators/autobind.ts" />
 namespace App {
     // Project Item
     // The ProjectItem class extends the Component class and represents a single project item in the project list.

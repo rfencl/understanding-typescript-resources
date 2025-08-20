@@ -7,133 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var App;
 (function (App) {
-    let ProjectStatus;
-    (function (ProjectStatus) {
-        ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
-        ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
-    })(ProjectStatus = App.ProjectStatus || (App.ProjectStatus = {}));
-    class Project {
-        constructor(id, title, description, people, status) {
-            this.id = id;
-            this.title = title;
-            this.description = description;
-            this.people = people;
-            this.status = status;
-        }
-    }
-    App.Project = Project;
-})(App || (App = {}));
-var App;
-(function (App) {
-    function autobind(_, _2, descriptor) {
-        const originalMethod = descriptor.value;
-        const adjDescriptor = {
-            configurable: true,
-            get() {
-                const boundFn = originalMethod.bind(this);
-                return boundFn;
-            }
-        };
-        return adjDescriptor;
-    }
-    App.autobind = autobind;
-})(App || (App = {}));
-var App;
-(function (App) {
-    class State {
-        constructor() {
-            this.listeners = [];
-        }
-        addListener(listenerFn) {
-            this.listeners.push(listenerFn);
-        }
-    }
-    class ProjectState extends State {
-        constructor() {
-            super();
-            this.projects = [];
-        }
-        static getInstance() {
-            if (this.instance) {
-                return this.instance;
-            }
-            this.instance = new ProjectState();
-            return this.instance;
-        }
-        addProject(title, description, people) {
-            const newProject = new App.Project(Math.random().toString(), title, description, people, App.ProjectStatus.Active);
-            this.projects.push(newProject);
-            this.notifyListeners();
-        }
-        moveProject(projectId, newStatus) {
-            const project = this.projects.find(prj => prj.id === projectId);
-            if (project && project.status !== newStatus) {
-                project.status = newStatus;
-                this.notifyListeners();
-            }
-        }
-        notifyListeners() {
-            for (const listenerFn of this.listeners) {
-                listenerFn(this.projects.slice());
-            }
-        }
-    }
-    App.ProjectState = ProjectState;
-    App.projectState = ProjectState.getInstance();
-})(App || (App = {}));
-var App;
-(function (App) {
-    class ValidationStatus {
-        constructor() {
-            this.isValid = true;
-            this.messages = [];
-        }
-        addMessage(message) {
-            this.messages.push(message);
-        }
-        getMessages() {
-            return this.messages;
-        }
-        isValidInput() {
-            return this.isValid;
-        }
-        setValid(valid) {
-            this.isValid = this.isValid && valid;
-            return valid;
-        }
-    }
-    function validate(validatableInput) {
-        const status = new ValidationStatus();
-        if (validatableInput.required) {
-            if (!status.setValid(validatableInput.value.toString().trim().length !== 0))
-                status.addMessage('value is required');
-        }
-        if (validatableInput.minLength != null && typeof validatableInput.value === 'string') {
-            if (!status.setValid(validatableInput.value.length >= validatableInput.minLength)) {
-                status.addMessage(`value must be at least ${validatableInput.minLength} characters long`);
-            }
-        }
-        if (validatableInput.maxLength != null && typeof validatableInput.value === 'string') {
-            if (!status.setValid(validatableInput.value.length <= validatableInput.maxLength)) {
-                status.addMessage(`value must be at most ${validatableInput.maxLength} characters long`);
-            }
-        }
-        if (validatableInput.min != null && typeof validatableInput.value === 'number') {
-            if (!status.setValid(validatableInput.value >= validatableInput.min)) {
-                status.addMessage(`value must be at least ${validatableInput.min}`);
-            }
-        }
-        if (validatableInput.max != null && typeof validatableInput.value === 'number') {
-            if (!status.setValid(validatableInput.value <= validatableInput.max)) {
-                status.addMessage(`value must be at most ${validatableInput.max}`);
-            }
-        }
-        return status;
-    }
-    App.validate = validate;
-})(App || (App = {}));
-var App;
-(function (App) {
     class Component {
         constructor(templateId, hostElementId, insertAtStart, newElementId) {
             this.templateElement = document.getElementById(templateId);
@@ -150,6 +23,21 @@ var App;
         }
     }
     App.Component = Component;
+})(App || (App = {}));
+var App;
+(function (App) {
+    function autobind(_, _2, descriptor) {
+        const originalMethod = descriptor.value;
+        const adjDescriptor = {
+            configurable: true,
+            get() {
+                const boundFn = originalMethod.bind(this);
+                return boundFn;
+            }
+        };
+        return adjDescriptor;
+    }
+    App.autobind = autobind;
 })(App || (App = {}));
 var App;
 (function (App) {
@@ -200,6 +88,67 @@ var App;
         App.autobind
     ], ProjectItem.prototype, "doubleClickHandler", null);
     App.ProjectItem = ProjectItem;
+})(App || (App = {}));
+var App;
+(function (App) {
+    let ProjectStatus;
+    (function (ProjectStatus) {
+        ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
+        ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
+    })(ProjectStatus = App.ProjectStatus || (App.ProjectStatus = {}));
+    class Project {
+        constructor(id, title, description, people, status) {
+            this.id = id;
+            this.title = title;
+            this.description = description;
+            this.people = people;
+            this.status = status;
+        }
+    }
+    App.Project = Project;
+})(App || (App = {}));
+var App;
+(function (App) {
+    class State {
+        constructor() {
+            this.listeners = [];
+        }
+        addListener(listenerFn) {
+            this.listeners.push(listenerFn);
+        }
+    }
+    class ProjectState extends State {
+        constructor() {
+            super();
+            this.projects = [];
+        }
+        static getInstance() {
+            if (this.instance) {
+                return this.instance;
+            }
+            this.instance = new ProjectState();
+            return this.instance;
+        }
+        addProject(title, description, people) {
+            const newProject = new App.Project(Math.random().toString(), title, description, people, App.ProjectStatus.Active);
+            this.projects.push(newProject);
+            this.notifyListeners();
+        }
+        moveProject(projectId, newStatus) {
+            const project = this.projects.find(prj => prj.id === projectId);
+            if (project && project.status !== newStatus) {
+                project.status = newStatus;
+                this.notifyListeners();
+            }
+        }
+        notifyListeners() {
+            for (const listenerFn of this.listeners) {
+                listenerFn(this.projects.slice());
+            }
+        }
+    }
+    App.ProjectState = ProjectState;
+    App.projectState = ProjectState.getInstance();
 })(App || (App = {}));
 var App;
 (function (App) {
@@ -350,5 +299,56 @@ var App;
     new App.ProjectInput();
     new App.ProjectList('active');
     new App.ProjectList('finished');
+})(App || (App = {}));
+var App;
+(function (App) {
+    class ValidationStatus {
+        constructor() {
+            this.isValid = true;
+            this.messages = [];
+        }
+        addMessage(message) {
+            this.messages.push(message);
+        }
+        getMessages() {
+            return this.messages;
+        }
+        isValidInput() {
+            return this.isValid;
+        }
+        setValid(valid) {
+            this.isValid = this.isValid && valid;
+            return valid;
+        }
+    }
+    function validate(validatableInput) {
+        const status = new ValidationStatus();
+        if (validatableInput.required) {
+            if (!status.setValid(validatableInput.value.toString().trim().length !== 0))
+                status.addMessage('value is required');
+        }
+        if (validatableInput.minLength != null && typeof validatableInput.value === 'string') {
+            if (!status.setValid(validatableInput.value.length >= validatableInput.minLength)) {
+                status.addMessage(`value must be at least ${validatableInput.minLength} characters long`);
+            }
+        }
+        if (validatableInput.maxLength != null && typeof validatableInput.value === 'string') {
+            if (!status.setValid(validatableInput.value.length <= validatableInput.maxLength)) {
+                status.addMessage(`value must be at most ${validatableInput.maxLength} characters long`);
+            }
+        }
+        if (validatableInput.min != null && typeof validatableInput.value === 'number') {
+            if (!status.setValid(validatableInput.value >= validatableInput.min)) {
+                status.addMessage(`value must be at least ${validatableInput.min}`);
+            }
+        }
+        if (validatableInput.max != null && typeof validatableInput.value === 'number') {
+            if (!status.setValid(validatableInput.value <= validatableInput.max)) {
+                status.addMessage(`value must be at most ${validatableInput.max}`);
+            }
+        }
+        return status;
+    }
+    App.validate = validate;
 })(App || (App = {}));
 //# sourceMappingURL=bundle.js.map
