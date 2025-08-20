@@ -294,11 +294,21 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
         console.log('Drag End');
     }
 
+    @autobind
+    doubleClickHandler(_: MouseEvent): void {
+        // Toggle project status
+        const newStatus = this.project.status === ProjectStatus.Active
+            ? ProjectStatus.Finished
+            : ProjectStatus.Active;
+        projectState.moveProject(this.project.id, newStatus);
+    }
+
     configure() {
         this.element.addEventListener('dragstart', this.dragStartHandler);
         this.element.addEventListener('dragend', this.dragEndHandler);
         this.element.setAttribute('draggable', 'true'); // Make the item draggable
         this.element.classList.add('draggable'); // Add a class for styling
+        this.element.addEventListener('dblclick', this.doubleClickHandler);
     }
 
     renderContent() {
