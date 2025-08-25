@@ -17,3 +17,14 @@ The **Code Snapshots** and **Lecture Attachments** folders contain one subfolder
 Code snapshots are primarily provided to allow you to compare your code to mine. The snapshots are taken directly from the course recordings and therefore reflect my code you see in the videos.
 
 Of course, you can also try running those code snapshots on your machine.
+
+# Sample projects
+There are four sample projects 
+The Google maps one is in prj-libs-follow/prj-libs-03-fetching-coordinates, it was built with web-pack and can be started by running npm start
+The drag and drop demo is in ProjectManager. it is run with the lite-server again npm start
+node-typescript is a backend api that can be run with bun app.ts or node app.ts
+React-TS is a react-js app todo list all front end and put together with vite start this up with 'npm run dev'
+
+
+
+
