@@ -20,10 +20,10 @@ Of course, you can also try running those code snapshots on your machine.
 
 # Sample projects
 There are four sample projects 
-- The Google maps one is in prj-libs-follow/prj-libs-03-fetching-coordinates, it was built with web-pack and can be started by running npm start
-- The drag and drop demo is in ProjectManager. it is run with the lite-server again npm start
-- node-typescript is a backend api that can be run with bun app.ts or node app.ts
-- React-TS is a react-js app todo list all front end and put together with vite start this up with 'npm run dev'
+- **The Google maps** one is in prj-libs-follow/prj-libs-03-fetching-coordinates, it was built with web-pack and can be started by running npm start
+- **The drag and drop** demo is in ProjectManager. it is run with the lite-server again npm start
+- **node-typescript** is a backend api that can be run with bun app.ts or node app.ts
+- **React-TS** is a react-js app todo list all front end and put together with vite start this up with 'npm run dev'
 
 
 
