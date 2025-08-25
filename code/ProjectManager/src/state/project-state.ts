@@ -1,4 +1,5 @@
-import { Project, ProjectStatus } from '../model/project.js';
+import { Project } from '../model/project.js';
+import { ProjectStatus } from '../model/project.js';
 
 // Listener type definition
 // This type defines a listener function that takes an array of items of type T.
